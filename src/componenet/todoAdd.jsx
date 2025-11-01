@@ -1,7 +1,24 @@
 import { Button, Grid, TextField } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import { useTodos } from "../context_api/context";
+import { v4 as uuidv4 } from 'uuid';
+
+// uuidv4();
 
 const TodoAdd = () => {
+  const { todos, addTodo } = useTodos();
+  const [todoInput, setTodoInput] = useState("");
+  const handleAddTodo = () => {
+    addTodo([
+      ...todos,
+      {
+        id: uuidv4(),
+        title: todoInput,
+        completed: false,
+      },
+    ]);
+    setTodoInput("");
+  };
   return (
     <>
       <Grid size={{ xs: 9 }}>
@@ -11,14 +28,14 @@ const TodoAdd = () => {
           id="filled-basic"
           label="Wrtie ..."
           variant="outlined"
+          value={todoInput}
+          onChange={(e) => setTodoInput(e.target.value)}
           sx={{
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
                 // borderColor: "black", // default
-                borderRadius : 2
+                borderRadius: 2,
               },
-
-
             },
           }}
         />
@@ -31,7 +48,12 @@ const TodoAdd = () => {
           justifyContent: "end",
         }}
       >
-        <Button variant="contained" size="large" sx={{borderRadius :2}}>
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ borderRadius: 2 }}
+          onClick={handleAddTodo}
+        >
           Add Todo
         </Button>
       </Grid>

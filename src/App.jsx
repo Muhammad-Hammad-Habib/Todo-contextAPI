@@ -1,11 +1,41 @@
 import { Box, Container, CssBaseline, Grid } from "@mui/material";
-// import "./App.css";
+import { useState } from "react";
 import TodoList from "./componenet/todoList";
+import { TodoProvider } from "./context_api/context.js";
 import TodoAdd from "./componenet/todoAdd";
 
 function App() {
+  const [todos, addTodo] = useState([
+    // {
+    //   id: 1,
+    //   title: "Hello",
+    //   completed: false,
+    // },
+    // {
+    //   id: 2,
+    //   title: "Hello2",
+    //   completed: true,
+    // },
+    // {
+    //   id: 3,
+    //   title: "Hello3",
+    //   completed: false,
+    // },
+  ]);
+  const removeTodo = (id) => {
+    const afterDeleteData = todos.filter((value, key) => value.id !== id);
+    addTodo(afterDeleteData);
+  };
+  const toggleTodoStatus = (id) => {
+    const afterToggleData = todos.map((value, key) =>
+      value.id == id ? { ...value, completed: !value.completed } : value
+    );
+
+    addTodo(afterToggleData);
+  };
+
   return (
-    <>
+    <TodoProvider value={{ todos, addTodo, removeTodo, toggleTodoStatus }}>
       <CssBaseline />
       <Container disableGutters maxWidth={false}>
         <Box
@@ -25,7 +55,7 @@ function App() {
               borderRadius: 3,
               width: "550px",
               height: "500px",
-              boxShadow: 1 
+              boxShadow: 1,
             }}
           >
             <Grid
@@ -54,7 +84,7 @@ function App() {
           </Box>
         </Box>
       </Container>
-    </>
+    </TodoProvider>
   );
 }
 

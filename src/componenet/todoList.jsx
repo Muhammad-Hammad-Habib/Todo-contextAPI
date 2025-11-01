@@ -8,19 +8,29 @@ import {
   IconButton,
 } from "@mui/material";
 import AutoDeleteSharpIcon from "@mui/icons-material/AutoDeleteSharp";
+import { useTodos } from "../context_api/context";
 
 const TodoList = () => {
+  const { todos, removeTodo, toggleTodoStatus } = useTodos();
+
+  // console.log(removeTodo);
 
   return (
-    <List sx={{ width: "80%", maxWidth: 360, bgcolor: "background.paper" }}>
-      {[1,2, 76, 3].map((value, key) => {
+    <List sx={{ width: "90%", maxHeight: "410px", overflowY: "auto" }}>
+      {todos.map((value, key) => {
+        const valueId = `${value.id}`;
         const labelId = `checkbox-list-label-${value}`;
-        console.log(key)
+        // console.log(key)
         return (
           <ListItem
-            key={value}
+            key={value.id}
             secondaryAction={
-              <IconButton edge="end" aria-label="comments">
+              <IconButton
+                id={valueId}
+                onClick={(e) => removeTodo(e.currentTarget.id)}
+                edge="end"
+                aria-label="comments"
+              >
                 <AutoDeleteSharpIcon />
               </IconButton>
             }
@@ -34,14 +44,22 @@ const TodoList = () => {
             >
               <ListItemIcon>
                 <Checkbox
+                  id={valueId}
                   edge="start"
-                  // checked={checked.includes(value)}
+                  checked={value.completed}
                   tabIndex={-1}
-                  // disableRipple
+                  onChange={(e) => toggleTodoStatus(e.currentTarget.id)}
+                  disableRipple
                   // inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+              <ListItemText
+                id={valueId}
+                sx={{
+                  textDecoration: value.completed ? "line-through" : "none",
+                }}
+                primary={value.title}
+              />
             </ListItemButton>
           </ListItem>
         );
