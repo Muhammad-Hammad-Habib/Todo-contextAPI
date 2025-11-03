@@ -1,27 +1,17 @@
 import { Box, Container, CssBaseline, Grid } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodoList from "./componenet/todoList";
 import { TodoProvider } from "./context_api/context.js";
 import TodoAdd from "./componenet/todoAdd";
 
 function App() {
-  const [todos, addTodo] = useState([
-    // {
-    //   id: 1,
-    //   title: "Hello",
-    //   completed: false,
-    // },
-    // {
-    //   id: 2,
-    //   title: "Hello2",
-    //   completed: true,
-    // },
-    // {
-    //   id: 3,
-    //   title: "Hello3",
-    //   completed: false,
-    // },
-  ]);
+  const [todos, addTodo] = useState([]);
+  useEffect(() => {
+    if (todos.length > 0) localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+  useEffect(() => {
+    addTodo(JSON.parse(localStorage.getItem("todos")));
+  }, []);
   const removeTodo = (id) => {
     const afterDeleteData = todos.filter((value, key) => value.id !== id);
     addTodo(afterDeleteData);
@@ -30,12 +20,19 @@ function App() {
     const afterToggleData = todos.map((value, key) =>
       value.id == id ? { ...value, completed: !value.completed } : value
     );
-
     addTodo(afterToggleData);
+  };
+  const updateTodo = (id, title) => {
+    const UpdateData = todos.map((value, key) =>
+      value.id == id ? { ...value, title } : value
+    );
+    addTodo(UpdateData);
   };
 
   return (
-    <TodoProvider value={{ todos, addTodo, removeTodo, toggleTodoStatus }}>
+    <TodoProvider
+      value={{ todos, addTodo, removeTodo, updateTodo, toggleTodoStatus }}
+    >
       <CssBaseline />
       <Container disableGutters maxWidth={false}>
         <Box

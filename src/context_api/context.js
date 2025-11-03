@@ -6,6 +6,7 @@ const TodosContext = createContext({
     ],
     addTodo: () => { },
     removeTodo: () => { },
+    updateTodo: () => { },
     toggleTodoStatus: () => { },
 })
 
